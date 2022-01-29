@@ -1,0 +1,7 @@
+<div tabindex="0" class="game" (keydown)="onKeydown($event)">
+  <div class="grid" *ngFor="let row of letterGrid" >
+    <div *ngFor="let cell of row">
+      <div class={{getCellClass(cell)}}>{{cell.letter}}</div>
+    </div>
+  </div>
+</div>  

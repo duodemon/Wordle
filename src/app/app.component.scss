@@ -1,0 +1,49 @@
+.app-root {
+    height: 100%
+}
+
+.game {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.grid {
+    flex-direction: row;
+    display: grid;
+    grid-template-columns: max-content max-content max-content max-content max-content;
+    grid-template-rows: max-content max-content max-content max-content max-content max-content;
+    row-gap: 2px;
+    column-gap: 8px;
+}
+
+.cell {
+    display: flex;
+    height: 60px;
+    width: 60px;
+    border: 2px solid grey;
+    font-weight: 700;
+    justify-content: center;
+    align-items: center;
+    font-size: xx-large;
+}
+
+.incorrect {
+    background-color: grey;
+    color: white;
+    border: 2px solid grey;
+}
+
+.correctLetter {
+    background-color: yellow;
+    color: white;
+    border: 2px solid yellow;
+}
+
+.correctPosition {
+    background-color: green;
+    color: white;
+    border: 2px solid green;
+}
