@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { HttpClient, JsonpClientBackend } from "@angular/common/http";
 
 @Component({
   selector: 'app-root',
@@ -15,38 +16,49 @@ export class AppComponent {
   rowNumber: number = 0;
   letterPosition: number = 0;
   solution: string = "HELLO";
+  wordSet: Set<string> = new Set<string>();
+  showNotInWordList: boolean = false;
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+    this.getAllWords();
+  }
 
   onKeydown(e: any) {
     if (this.rowNumber == 6) {
       return;
     }
 
-    if (e.keyCode >= 65 && e.keyCode <= 90) {
+    if (e.keyCode >= 65 && e.keyCode <= 90) { // a-z
       if (this.letterPosition < 5) {
         this.letterGrid[this.rowNumber][this.letterPosition].letter = e.key.toUpperCase();
         this.letterPosition++;
       }
     }
-    else if (e.keyCode == 8) {
+    else if (e.keyCode == 8) { // backspace
       if (this.letterPosition > 0) {
         this.letterPosition--;
       }
       this.letterGrid[this.rowNumber][this.letterPosition].letter = "";
       
     }
-    else if (e.keyCode == 13) {
+    else if (e.keyCode == 13) { // enter
       if (this.letterPosition == 5) {
-        this.verifyWord();
+        var tempWord = this.letterGrid[this.rowNumber][0].letter + this.letterGrid[this.rowNumber][1].letter + this.letterGrid[this.rowNumber][2].letter + this.letterGrid[this.rowNumber][3].letter + this.letterGrid[this.rowNumber][4].letter; 
+        if (!this.wordSet.has(tempWord)) {
+          this.showNotInWordList = true;
+          return
+        }
+        this.showNotInWordList = false;
+        this.verifyWord(tempWord);
         this.rowNumber++;
         this.letterPosition = 0;
       }
     }
   }
 
-  verifyWord() {
-    var tempWord = this.letterGrid[this.rowNumber][0].letter + this.letterGrid[this.rowNumber][1].letter + this.letterGrid[this.rowNumber][2].letter + this.letterGrid[this.rowNumber][3].letter + this.letterGrid[this.rowNumber][4].letter; 
+  verifyWord(tempWord: string) {
     var finalState = [0, 0, 0, 0, 0]
     var tempState = [0, 0, 0, 0, 0];
     let i;
@@ -86,5 +98,15 @@ export class AppComponent {
       default:
         return 'cell';
     }
+  }
+
+  getAllWords() {
+    this.http.get('assets/words.txt', { responseType:'text' })
+      .subscribe(
+        data => {
+          this.wordSet = new Set(data.toUpperCase().split('\r\n'));
+        }
+      )
+   
   }
 }
